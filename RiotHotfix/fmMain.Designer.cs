@@ -61,7 +61,7 @@
             this.nightForm1.DrawIcon = true;
             this.nightForm1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.nightForm1.HeadColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(61)))));
-            this.nightForm1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.nightForm1.ImeMode = System.Windows.Forms.ImeMode.Katakana;
             this.nightForm1.Location = new System.Drawing.Point(0, 0);
             this.nightForm1.MinimumSize = new System.Drawing.Size(100, 42);
             this.nightForm1.Name = "nightForm1";

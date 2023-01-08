@@ -22,7 +22,7 @@ namespace RiotHotfix
             var lolVersions = hotFix.LoadData("https://raw.githubusercontent.com/pyhteam/RiotHotfix/master/DataHotfix/data.json");
             lolVersion = lolVersions.FirstOrDefault();
             // set version
-            txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + lolVersion.UpdateDate;
+            txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + DateTime.Now;
 
             // check exist file
             var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe", lolVersion.Version);
