@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics;
 using System.Net;
+using System.Text.Json;
 
 namespace RiotHotfix.Data
 {
@@ -8,7 +9,7 @@ namespace RiotHotfix.Data
         private List<LOLVersion> LOLVersions = new List<LOLVersion>();
         public HotFix() { }
 
-        public string CopyFile(string sourceFile, string destinationFile)
+        public object CopyFile(string sourceFile, string destinationFile)
         {
             try
             {
@@ -37,7 +38,7 @@ namespace RiotHotfix.Data
             }
         }
 
-        public string DownloadFile(string url, string destinationFile)
+        public object DownloadFile(string url, string destinationFile)
         {
             try
             {
@@ -45,11 +46,19 @@ namespace RiotHotfix.Data
                 {
                     client.DownloadFile(url, destinationFile);
                 }
-                return "File downloaded";
+                return new
+                {
+                    Success = true,
+                    Message = "File downloaded"
+                };
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return new
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
             }
         }
 
@@ -60,7 +69,8 @@ namespace RiotHotfix.Data
                 using (WebClient client = new WebClient())
                 {
                     string json = client.DownloadString(url);
-                    LOLVersions = JsonConvert.DeserializeObject<List<LOLVersion>>(json);
+                    // convert json to object using Text.Json
+                    LOLVersions = JsonSerializer.Deserialize<List<LOLVersion>>(json);
                 }
                 LOLVersions = LOLVersions.OrderByDescending(x => x.UpdateDate).ToList();
                 return LOLVersions;
@@ -68,6 +78,18 @@ namespace RiotHotfix.Data
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+        public string GetFileVersion(string file)
+        {
+            try
+            {
+                FileVersionInfo myFileVersionInfo = FileVersionInfo.GetVersionInfo(file);
+                return myFileVersionInfo.FileVersion;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
             }
         }
     }

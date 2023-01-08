@@ -4,8 +4,8 @@ namespace RiotHotfix
 {
     public partial class fmMain : Form
     {
-        HotFix HotFix = new HotFix();
-        LOLVersion LOLVersion = new LOLVersion();
+        HotFix hotFix = new HotFix();
+        LOLVersion lolVersion = new LOLVersion();
         public fmMain()
         {
             InitializeComponent();
@@ -16,21 +16,55 @@ namespace RiotHotfix
         {
             txtFolderGame.Text = "D:\\Riot Games\\League of Legends\\Game";
             // load data from url
-            var LOLVersions = HotFix.LoadData("https://drive.google.com/file/d/1b2kOWFM_eocjV4f1pFZmnSxhMp7v0_A0/view?usp=sharing");
-            LOLVersion = LOLVersions.FirstOrDefault();
+            var lolVersions = hotFix.LoadData("https://raw.githubusercontent.com/pyhteam/RiotHotfix/master/data.json");
+            lolVersion = lolVersions.FirstOrDefault();
             // set version
-            txtStatusBar.Text = "Version: " + LOLVersion.Version;
+            txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + lolVersion.UpdateDate;
 
         }
 
         private void btnPacth_Click(object sender, EventArgs e)
         {
+            string folderGame = txtFolderGame.Text;
+            if (folderGame == "")
+            {
+                MessageBox.Show("Please select folder of League of Legends", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // download file
+            // get path desktop pc
+            string pathDesktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var result = hotFix.DownloadFile(lolVersion.Link, pathDesktop);
+            if (result.GetObj("Success") == "true")
+            {
+                MessageBox.Show(result.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            // copy file
+            var resultCopy = hotFix.CopyFile(pathDesktop + "\\League of Legends.exe", folderGame + "\\League of Legends.exe");
+            var resultCopy2 = hotFix.CopyFile(pathDesktop + "\\stub.dll", folderGame + "\\stub.dll");
+            if (resultCopy.GetObj("Success") == "true")
+            {
+                MessageBox.Show("Pacth success", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(resultCopy.GetObj("Message").ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnCheckVersion_Click(object sender, EventArgs e)
         {
-
+            // get file version
+            string folderGame = txtFolderGame.Text;
+            if (folderGame == "")
+            {
+                MessageBox.Show("Please select folder of League of Legends", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            var result = hotFix.GetFileVersion(folderGame + "\\League of Legends.exe");
+            MessageBox.Show("Version: " + result, "Your LOL Version", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnExit_Click(object sender, EventArgs e)
