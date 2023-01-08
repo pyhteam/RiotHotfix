@@ -25,8 +25,8 @@ namespace RiotHotfix
             txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + lolVersion.UpdateDate;
 
             // check exist file
-            var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe");
-            var exist2 = hotFix.CheckExistFile(srcPath + "\\stub.dll");
+            var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe", lolVersion.Version);
+            var exist2 = hotFix.CheckExistFile(srcPath + "\\stub.dll", lolVersion.Version);
             if (!exist && !exist2)
             {
                 btnCheckVersion.Text = "Downloading...";
@@ -49,6 +49,8 @@ namespace RiotHotfix
                     MessageBox.Show(result.Messages, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            btnCheckVersion.Enabled = true;
+            btnPacth.Enabled = true;
 
         }
 
@@ -65,11 +67,13 @@ namespace RiotHotfix
             btnPacth.Enabled = false;
             btnPacth.BackColor = Color.Gray;
             //check exist file
-            var exist = hotFix.CheckExistFile(folderGame + "\\League of Legends.exe");
-            var exist2 = hotFix.CheckExistFile(folderGame + "\\stub.dll");
-            if (!exist && !exist2)
+            var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe", lolVersion.Version);
+            var exist2 = hotFix.CheckExistFile(srcPath + "\\stub.dll");
+            if (!exist || !exist2)
             {
-                MessageBox.Show("File not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Bạn chưa update data! vui lòng Ấn tải hotfix", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnPacth.Text = "Pacth";
+                btnPacth.Enabled = true;
                 return;
             }
             var resultCopy = hotFix.CopyFile(srcPath + "\\League of Legends.exe", folderGame + "\\League of Legends.exe");
@@ -138,6 +142,44 @@ namespace RiotHotfix
             {
                 txtFolderGame.Text = result.SelectedPath;
             }
+        }
+
+        private void btnDownloadHotfix_Click(object sender, EventArgs e)
+        {
+            // load data from url
+            var lolVersions = hotFix.LoadData("https://raw.githubusercontent.com/pyhteam/RiotHotfix/master/DataHotfix/data.json");
+            lolVersion = lolVersions.FirstOrDefault();
+            // set version
+            txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + lolVersion.UpdateDate;
+
+            // check exist file
+            var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe", lolVersion.Version);
+            var exist2 = hotFix.CheckExistFile(srcPath + "\\stub.dll");
+            if (!exist || !exist2)
+            {
+                btnDownloadHotfix.Text = " Downloading...";
+                btnDownloadHotfix.Width = 150;
+                btnPacth.Enabled = false;
+                // download file
+                var result = hotFix.DownloadFile(lolVersion.Link, srcPath + "\\League of Legends.exe", "HotfixLOL");
+                var result2 = hotFix.DownloadFile(lolVersion.Link2, srcPath + "\\stub.dll", "HotfixLOL");
+                // sleep 3s
+                Thread.Sleep(3000);
+                btnDownloadHotfix.Text = "Update";
+                btnCheckVersion.Enabled = true;
+                btnPacth.Enabled = true;
+                btnDownloadHotfix.Width = 45;
+                if (result.Success && result2.Success)
+                {
+                    MessageBox.Show(result.Messages, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(result.Messages, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            btnCheckVersion.Enabled = true;
+            btnPacth.Enabled = true;
         }
     }
 }

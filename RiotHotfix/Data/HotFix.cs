@@ -120,13 +120,24 @@ namespace RiotHotfix.Data
                 return ex.Message;
             }
         }
-        public bool CheckExistFile(string file)
+        public bool CheckExistFile(string file, string? version = null)
         {
             try
             {
-                if (File.Exists(file))
+                if (version != null)
                 {
-                    return true;
+
+                    if (File.Exists(file) && GetFileVersion(file) == version)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (File.Exists(file))
+                    {
+                        return true;
+                    }
                 }
                 return false;
             }

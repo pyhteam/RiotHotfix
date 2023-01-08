@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmMain));
             this.nightForm1 = new ReaLTaiizor.Forms.NightForm();
+            this.btnDownloadHotfix = new ReaLTaiizor.Controls.LostAcceptButton();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -39,7 +41,6 @@
             this.btnCheckVersion = new ReaLTaiizor.Controls.LostAcceptButton();
             this.txtFolderGame = new ReaLTaiizor.Controls.DreamTextBox();
             this.btnPacth = new ReaLTaiizor.Controls.LostAcceptButton();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.nightForm1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -50,15 +51,17 @@
             // nightForm1
             // 
             this.nightForm1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(48)))), ((int)(((byte)(51)))));
+            this.nightForm1.Controls.Add(this.btnDownloadHotfix);
             this.nightForm1.Controls.Add(this.pictureBox3);
             this.nightForm1.Controls.Add(this.pictureBox2);
             this.nightForm1.Controls.Add(this.pictureBox1);
             this.nightForm1.Controls.Add(this.txtStatusBar);
             this.nightForm1.Controls.Add(this.lostPanel1);
             this.nightForm1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nightForm1.DrawIcon = false;
+            this.nightForm1.DrawIcon = true;
             this.nightForm1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.nightForm1.HeadColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(61)))));
+            this.nightForm1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.nightForm1.Location = new System.Drawing.Point(0, 0);
             this.nightForm1.MinimumSize = new System.Drawing.Size(100, 42);
             this.nightForm1.Name = "nightForm1";
@@ -68,6 +71,20 @@
             this.nightForm1.Text = "Riot | League Of Legends Hotfix";
             this.nightForm1.TextAlignment = ReaLTaiizor.Forms.NightForm.Alignment.Left;
             this.nightForm1.TitleBarTextColor = System.Drawing.Color.White;
+            // 
+            // btnDownloadHotfix
+            // 
+            this.btnDownloadHotfix.BackColor = System.Drawing.Color.SeaGreen;
+            this.btnDownloadHotfix.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnDownloadHotfix.ForeColor = System.Drawing.Color.White;
+            this.btnDownloadHotfix.HoverColor = System.Drawing.Color.ForestGreen;
+            this.btnDownloadHotfix.Image = null;
+            this.btnDownloadHotfix.Location = new System.Drawing.Point(213, 5);
+            this.btnDownloadHotfix.Name = "btnDownloadHotfix";
+            this.btnDownloadHotfix.Size = new System.Drawing.Size(43, 19);
+            this.btnDownloadHotfix.TabIndex = 4;
+            this.btnDownloadHotfix.Text = "Update";
+            this.btnDownloadHotfix.Click += new System.EventHandler(this.btnDownloadHotfix_Click);
             // 
             // pictureBox3
             // 
@@ -205,10 +222,6 @@
             this.btnPacth.Text = "Pacth";
             this.btnPacth.Click += new System.EventHandler(this.btnPacth_Click);
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "chooseFolderGame";
-            // 
             // fmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -216,6 +229,7 @@
             this.ClientSize = new System.Drawing.Size(604, 307);
             this.Controls.Add(this.nightForm1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(1920, 1040);
             this.MinimumSize = new System.Drawing.Size(126, 50);
             this.Name = "fmMain";
@@ -245,6 +259,6 @@
         private PictureBox pictureBox3;
         private PictureBox pictureBox2;
         private ReaLTaiizor.Controls.LostAcceptButton btnExit;
-        private OpenFileDialog openFileDialog1;
+        private ReaLTaiizor.Controls.LostAcceptButton btnDownloadHotfix;
     }
 }
