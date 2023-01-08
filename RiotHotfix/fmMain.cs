@@ -6,20 +6,49 @@ namespace RiotHotfix
     {
         HotFix hotFix = new HotFix();
         LOLVersion lolVersion = new LOLVersion();
+        string srcPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\HotfixLOL";
         public fmMain()
         {
             InitializeComponent();
+            btnPacth.Enabled = false;
             LoadData();
+
         }
 
         private void LoadData()
         {
             txtFolderGame.Text = "D:\\Riot Games\\League of Legends\\Game";
             // load data from url
-            var lolVersions = hotFix.LoadData("https://raw.githubusercontent.com/pyhteam/RiotHotfix/master/data.json");
+            var lolVersions = hotFix.LoadData("https://raw.githubusercontent.com/pyhteam/RiotHotfix/master/DataHotfix/data.json");
             lolVersion = lolVersions.FirstOrDefault();
             // set version
             txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + lolVersion.UpdateDate;
+
+            // check exist file
+            var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe");
+            var exist2 = hotFix.CheckExistFile(srcPath + "\\stub.dll");
+            if (!exist && !exist2)
+            {
+                btnCheckVersion.Text = "Downloading...";
+                btnCheckVersion.Enabled = false;
+                btnCheckVersion.BackColor = Color.Gray;
+                // download file
+                var result = hotFix.DownloadFile(lolVersion.Link, srcPath + "\\League of Legends.exe", "HotfixLOL");
+                var result2 = hotFix.DownloadFile(lolVersion.Link2, srcPath + "\\stub.dll", "HotfixLOL");
+                // sleep 3s
+                Thread.Sleep(3000);
+                btnCheckVersion.Text = "Check Version";
+                btnCheckVersion.Enabled = true;
+                btnPacth.Enabled = true;
+                if (result.Success && result2.Success)
+                {
+                    MessageBox.Show(result.Messages, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(result.Messages, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
 
         }
 
@@ -31,26 +60,32 @@ namespace RiotHotfix
                 MessageBox.Show("Please select folder of League of Legends", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            // download file
-            // get path desktop pc
-            string pathDesktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var result = hotFix.DownloadFile(lolVersion.Link, pathDesktop);
-            if (result.GetObj("Success") == "true")
+            // copy file
+            btnPacth.Text = "Patching...";
+            btnPacth.Enabled = false;
+            btnPacth.BackColor = Color.Gray;
+            //check exist file
+            var exist = hotFix.CheckExistFile(folderGame + "\\League of Legends.exe");
+            var exist2 = hotFix.CheckExistFile(folderGame + "\\stub.dll");
+            if (!exist && !exist2)
             {
-                MessageBox.Show(result.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("File not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            var resultCopy = hotFix.CopyFile(srcPath + "\\League of Legends.exe", folderGame + "\\League of Legends.exe");
+            var resultCopy2 = hotFix.CopyFile(srcPath + "\\stub.dll", folderGame + "\\stub.dll");
+            // sleep 3s
+            Thread.Sleep(3000);
+            btnPacth.Text = "Pacth";
+            btnPacth.Enabled = true;
 
-            // copy file
-            var resultCopy = hotFix.CopyFile(pathDesktop + "\\League of Legends.exe", folderGame + "\\League of Legends.exe");
-            var resultCopy2 = hotFix.CopyFile(pathDesktop + "\\stub.dll", folderGame + "\\stub.dll");
-            if (resultCopy.GetObj("Success") == "true")
+            if (resultCopy.Success && resultCopy2.Success)
             {
-                MessageBox.Show("Pacth success", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(resultCopy.Messages, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show(resultCopy.GetObj("Message").ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(resultCopy.Messages, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -65,6 +100,21 @@ namespace RiotHotfix
             }
             var result = hotFix.GetFileVersion(folderGame + "\\League of Legends.exe");
             MessageBox.Show("Version: " + result, "Your LOL Version", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // equal version
+            if (lolVersion.Version == result)
+            {
+                MessageBox.Show("Bạn đã cài hotfix", "Your LOL Version", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("LOL của bạn chưa cài hotfix", "Your LOL Version", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // aske user if he want to update
+                var result2 = MessageBox.Show("Bạn có muốn cài hotfix không?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result2 == DialogResult.Yes)
+                {
+                    btnPacth_Click(sender, e);
+                }
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)

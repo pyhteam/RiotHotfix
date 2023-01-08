@@ -9,55 +9,83 @@ namespace RiotHotfix.Data
         private List<LOLVersion> LOLVersions = new List<LOLVersion>();
         public HotFix() { }
 
-        public object CopyFile(string sourceFile, string destinationFile)
+        public Response CopyFile(string sourceFile, string destinationFile)
         {
             try
             {
                 File.Copy(sourceFile, destinationFile, true);
-                return "File copied";
+                return new Response()
+                {
+                    Success = true,
+                    Messages = "Copy file success"
+                };
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return new Response()
+                {
+                    Success = false,
+                    Messages = ex.Message
+                };
             }
         }
-        public string DeleteFile(string file)
+        public Response DeleteFile(string file)
         {
             try
             {
                 if (File.Exists(file))
                 {
                     File.Delete(file);
-                    return "File deleted";
+                    return new Response()
+                    {
+                        Success = true,
+                        Messages = "Delete file success"
+                    };
                 }
-                return "File not found";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-
-        public object DownloadFile(string url, string destinationFile)
-        {
-            try
-            {
-                using (WebClient client = new WebClient())
+                return new Response()
                 {
-                    client.DownloadFile(url, destinationFile);
-                }
-                return new
-                {
-                    Success = true,
-                    Message = "File downloaded"
+                    Success = false,
+                    Messages = "File not found"
                 };
             }
             catch (Exception ex)
             {
-                return new
+                return new Response()
                 {
                     Success = false,
-                    Message = ex.Message
+                    Messages = ex.Message
+                };
+            }
+        }
+
+        public Response DownloadFile(string url, string destinationFile, string folderName)
+        {
+            //check exist folder
+
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+            }
+            try
+            {
+                // download 
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadFile(url, destinationFile);
+                }
+
+                return new Response()
+                {
+                    Success = true,
+                    Messages = "Download file success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response()
+                {
+                    Success = false,
+                    Messages = ex.Message
                 };
             }
         }
@@ -90,6 +118,21 @@ namespace RiotHotfix.Data
             catch (Exception ex)
             {
                 return ex.Message;
+            }
+        }
+        public bool CheckExistFile(string file)
+        {
+            try
+            {
+                if (File.Exists(file))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }
