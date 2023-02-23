@@ -1,4 +1,5 @@
 using RiotHotfix.Data;
+using System.Diagnostics;
 
 namespace RiotHotfix
 {
@@ -11,6 +12,11 @@ namespace RiotHotfix
         {
             InitializeComponent();
             btnPacth.Enabled = false;
+            // check folder exist
+            if (!Directory.Exists(srcPath))
+            {
+                Directory.CreateDirectory(srcPath);
+            }
             LoadData();
 
         }
@@ -185,6 +191,26 @@ namespace RiotHotfix
         private void nightForm1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            // link to url
+            Process.Start(new ProcessStartInfo
+            {
+                UseShellExecute = true,
+                FileName = "https://www.facebook.com/pyhteam.mssen"
+            }).Dispose();
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                UseShellExecute = true,
+                FileName = "https://github.com/pyhteam"
+            }).Dispose();
+           
         }
     }
 }
