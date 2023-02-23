@@ -6,7 +6,7 @@ namespace RiotHotfix
     {
         HotFix hotFix = new HotFix();
         LOLVersion lolVersion = new LOLVersion();
-        string srcPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\HotfixLOL";
+        string srcPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\HotfixLOL";
         public fmMain()
         {
             InitializeComponent();
@@ -17,7 +17,7 @@ namespace RiotHotfix
 
         private void LoadData()
         {
-            txtFolderGame.Text = "D:\\Riot Games\\League of Legends\\Game";
+            txtFolderGame.Text = @"D:\Riot Games\League of Legends\Game";
             // load data from url
             var lolVersions = hotFix.LoadData("https://raw.githubusercontent.com/pyhteam/RiotHotfix/master/DataHotfix/data.json");
             lolVersion = lolVersions.FirstOrDefault();
@@ -25,16 +25,16 @@ namespace RiotHotfix
             txtStatusBar.Text = "Version: " + lolVersion.Version + " | Date: " + DateTime.Now;
 
             // check exist file
-            var exist = hotFix.CheckExistFile(srcPath + "\\League of Legends.exe", lolVersion.Version);
-            var exist2 = hotFix.CheckExistFile(srcPath + "\\stub.dll", lolVersion.Version);
+            var exist = hotFix.CheckExistFile(srcPath + @"\League of Legends.exe", lolVersion.Version);
+            var exist2 = hotFix.CheckExistFile(srcPath + @"\stub.dll", lolVersion.Version);
             if (!exist && !exist2)
             {
                 btnCheckVersion.Text = "Downloading...";
                 btnCheckVersion.Enabled = false;
                 btnCheckVersion.BackColor = Color.Gray;
                 // download file
-                var result = hotFix.DownloadFile(lolVersion.Link, srcPath + "\\League of Legends.exe", "HotfixLOL");
-                var result2 = hotFix.DownloadFile(lolVersion.Link2, srcPath + "\\stub.dll", "HotfixLOL");
+                var result = hotFix.DownloadFile(lolVersion.Link, srcPath + @"\League of Legends.exe", "HotfixLOL");
+                var result2 = hotFix.DownloadFile(lolVersion.Link2, srcPath + @"\stub.dll", "HotfixLOL");
                 // sleep 3s
                 Thread.Sleep(3000);
                 btnCheckVersion.Text = "Check Version";
@@ -180,6 +180,11 @@ namespace RiotHotfix
             }
             btnCheckVersion.Enabled = true;
             btnPacth.Enabled = true;
+        }
+
+        private void nightForm1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

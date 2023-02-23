@@ -71,6 +71,7 @@
             this.nightForm1.Text = "Riot | League Of Legends Hotfix";
             this.nightForm1.TextAlignment = ReaLTaiizor.Forms.NightForm.Alignment.Left;
             this.nightForm1.TitleBarTextColor = System.Drawing.Color.White;
+            this.nightForm1.Click += new System.EventHandler(this.nightForm1_Click);
             // 
             // btnDownloadHotfix
             // 
